@@ -58,38 +58,42 @@ class UploadController extends Controller {
 
         if (Session::get('lfm_type') == "Images")
         {
-            $file = Input::file('file_to_upload');
-            $working_dir = Input::get('working_dir');
-            $destinationPath = base_path() . "/" . $this->file_location;
+          $files = Input::file('file_to_upload');
+          foreach ($files as $file) {
+            
+              $working_dir = Input::get('working_dir');
+              $destinationPath = base_path() . "/" . $this->file_location;
 
-            $extension = $file->getClientOriginalExtension();
+              $extension = $file->getClientOriginalExtension();
 
-            if(!empty($this->allowed_types["Images"]) && !in_array($extension, $this->allowed_types["Images"]))
-            {
-                return "File type is not allowed!";
-                exit;
-            }
+              if(!empty($this->allowed_types["Images"]) && !in_array($extension, $this->allowed_types["Images"]))
+              {
+                  return "File type is not allowed!";
+                  exit;
+              }
 
-            if (strlen($working_dir) > 1)
-            {
-                $destinationPath .= $working_dir . "/";
-            }
+              if (strlen($working_dir) > 1)
+              {
+                  $destinationPath .= $working_dir . "/";
+              }
 
-            $filename = $file->getClientOriginalName();
+              $filename = $file->getClientOriginalName();
 
-            $new_filename = Str::slug(str_replace($extension, '', $filename)) . "." . $extension;
+              $new_filename = Str::slug(str_replace($extension, '', $filename)) . "." . $extension;
 
-            Input::file('file_to_upload')->move($destinationPath, $new_filename);
+              $file->move($destinationPath, $new_filename);
 
-            if (!File::exists($destinationPath . "thumbs"))
-            {
-                File::makeDirectory($destinationPath . "thumbs");
-            }
+              if (!File::exists($destinationPath . "thumbs"))
+              {
+                  File::makeDirectory($destinationPath . "thumbs");
+              }
 
-            $thumb_img = Image::make($destinationPath . $new_filename);
-            $thumb_img->fit(200, 200)
-                ->save($destinationPath . "thumbs/" . $new_filename);
-            unset($thumb_img);
+              $thumb_img = Image::make($destinationPath . $new_filename);
+              $thumb_img->fit(200, 200)
+                  ->save($destinationPath . "thumbs/" . $new_filename);
+              unset($thumb_img);
+            
+          }
 
             return "OK";
         } else

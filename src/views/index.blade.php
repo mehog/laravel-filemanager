@@ -91,12 +91,12 @@
             </div>
             <div class="modal-body">
                 {!! Form::open(array('url' => '/laravel-filemanager/upload', 'role' => 'form', 'name' => 'uploadForm',
-                'id' => 'uploadForm', 'method' => 'post', 'enctype' => 'multipart/form-data')) !!}
+                'id' => 'uploadForm', 'method' => 'post', 'enctype' => 'multipart/form-data', 'files' => true)) !!}
                 <div class="form-group" id="attachment">
                     {!! Form::label('file_to_upload', Lang::get('laravel-filemanager::lfm.message-choose'), array('class' => 'control-label')); !!}
                     <div class="controls">
                         <div class="input-group" style="width: 100%">
-                            <input type="file" id="file_to_upload" name="file_to_upload">
+                            <input type="file" id="file_to_upload" name="file_to_upload[]" multiple="multiple">
                         </div>
                     </div>
                 </div>
